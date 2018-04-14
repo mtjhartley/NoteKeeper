@@ -3,8 +3,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.example.michael.notekeeper.NoteActivity">
     <item
+        android:id="@+id/action_cancel"
+        android:orderInCategory="102"
+        android:title="Cancel" />
+    <item
         android:id="@+id/action_send_mail"
-        android:orderInCategory="100"
-        android:title="Send as email"
-        app:showAsAction="never" />
+        android:orderInCategory="103"
+        android:title="Send as email" />
 </menu>

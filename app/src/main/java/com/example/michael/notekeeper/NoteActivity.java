@@ -22,6 +22,8 @@ public class NoteActivity extends AppCompatActivity {
     private Spinner mSpinnerCourses;
     private EditText mTextNoteTitle;
     private EditText mTextNoteText;
+    private int mNotePosition;
+    private boolean mIsCancelling;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +62,25 @@ public class NoteActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        //want to save our note within this method, unless we are cancelling!
+        if(mIsCancelling){
+            if(mIsNewNote) {
+                DataManager.getInstance().removeNote(mNotePosition);
+            }
+        } else {
+        saveNote();
+        }
+    }
+
+    private void saveNote() {
+        mNote.setCourse((CourseInfo) mSpinnerCourses.getSelectedItem());
+        mNote.setTitle(mTextNoteTitle.getText().toString());
+        mNote.setText(mTextNoteText.getText().toString());
+    }
+
     private void readDisplayStateValues() {
         Intent intent = getIntent();
         //extras that are value type take 2 parameters, what do we return if there's no extra for 2nd param.
@@ -67,11 +88,21 @@ public class NoteActivity extends AppCompatActivity {
         int position = intent.getIntExtra(NOTE_POSITION, POSITION_NOT_SET);
         //note now contains a refernece to the note that was selected in the notelist activity.
         mIsNewNote = position == POSITION_NOT_SET;
-        if (!mIsNewNote) {
+        if (mIsNewNote) {
+            createNewNote();
+        } else {
             //get the one if one exists from the intent!∂
             mNote = DataManager.getInstance().getNotes().get(position);
         }
 
+
+    }
+
+    private void createNewNote() {
+        //create a new note through readDisplayStateValues, called thru onCreate
+        DataManager dm = DataManager.getInstance();
+        mNotePosition = dm.createNewNote();
+        mNote = dm.getNotes().get(mNotePosition);
     }
 
     @Override
@@ -92,6 +123,10 @@ public class NoteActivity extends AppCompatActivity {
         if (id == R.id.action_send_mail) {
             sendEmail();
             return true;
+        } else if (id == R.id.action_cancel) {
+            mIsCancelling = true;
+            //returns to previous activity, need to circumvent onPause
+            finish();
         }
 
         return super.onOptionsItemSelected(item);
