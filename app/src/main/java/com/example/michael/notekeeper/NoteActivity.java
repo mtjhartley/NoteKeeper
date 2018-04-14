@@ -1,5 +1,6 @@
 package com.example.michael.notekeeper;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -9,11 +10,17 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.Spinner;
 
 import java.util.List;
 
 public class NoteActivity extends AppCompatActivity {
+    //this public static final string is used for extra information in our
+    //NoteListActivity intent in initializeDisplayContent
+    public static final String NOTE_INFO = "com.example.michael.notekeeper.NOTE_INFO";
+    private NoteInfo mNote;
+    private boolean mIsNewNote;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,9 +34,37 @@ public class NoteActivity extends AppCompatActivity {
         List<CourseInfo> courses = DataManager.getInstance().getCourses();
         ArrayAdapter<CourseInfo> adapterCourses =
                 new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, courses);
-
         adapterCourses.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerCourses.setAdapter(adapterCourses);
+        
+        //method for getting the values out of the intent
+        readDisplayStateValues();
+
+        //get refererences to the 2 edit texts within the activity (title and text)
+        EditText textNoteTitle = (EditText) findViewById(R.id.text_note_title);
+        EditText textNoteText = (EditText) findViewById(R.id.text_note_text);
+
+        if (!mIsNewNote) {
+            displayNote(spinnerCourses, textNoteTitle, textNoteText);
+        }
+    }
+
+    private void displayNote(Spinner spinnerCourses, EditText textNoteTitle, EditText textNoteText) {
+        List<CourseInfo> courses = DataManager.getInstance().getCourses();
+        int courseIndex = courses.indexOf(mNote.getCourse());
+        spinnerCourses.setSelection(courseIndex);
+        //set the title and the text from the mNote private thing which we got from readDisplayStateValues;
+        textNoteTitle.setText(mNote.getTitle());
+        textNoteText.setText(mNote.getText());
+
+    }
+
+    private void readDisplayStateValues() {
+        Intent intent = getIntent();
+        mNote = intent.getParcelableExtra(NOTE_INFO);
+        //note now contains a refernece to the note that was selected in the notelist activity.
+        mIsNewNote = mNote == null;
+
     }
 
     @Override

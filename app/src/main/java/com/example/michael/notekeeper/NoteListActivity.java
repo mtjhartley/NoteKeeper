@@ -26,8 +26,7 @@ public class NoteListActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                startActivity(new Intent(NoteListActivity.this, NoteActivity.class));
             }
         });
 
@@ -35,7 +34,7 @@ public class NoteListActivity extends AppCompatActivity {
     }
 
     private void initializeDisplayContent() {
-        ListView listNotes = (ListView) findViewById(R.id.list_notes);
+        final ListView listNotes = (ListView) findViewById(R.id.list_notes);
 
         List<NoteInfo> notes = DataManager.getInstance().getNotes();
         ArrayAdapter<NoteInfo> adapterNotes = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, notes);
@@ -52,6 +51,9 @@ public class NoteListActivity extends AppCompatActivity {
                 //need to qualify reference to be NoteListActivity.this
                 Intent intent = new Intent(NoteListActivity.this, NoteActivity.class);
 
+                //the selected note is now passed in with the intent!
+                NoteInfo note = (NoteInfo) listNotes.getItemAtPosition(position);
+                intent.putExtra(NoteActivity.NOTE_INFO, note);
                 //start our activity from the intent!
                 startActivity(intent);
             }
