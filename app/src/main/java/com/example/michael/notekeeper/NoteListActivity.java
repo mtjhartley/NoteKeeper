@@ -3,7 +3,6 @@ package com.example.michael.notekeeper;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -36,6 +35,7 @@ public class NoteListActivity extends AppCompatActivity {
     private void initializeDisplayContent() {
         final ListView listNotes = (ListView) findViewById(R.id.list_notes);
 
+        //data manager to get all notes, load into adapter to populate our list view!
         List<NoteInfo> notes = DataManager.getInstance().getNotes();
         ArrayAdapter<NoteInfo> adapterNotes = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, notes);
 
@@ -52,8 +52,11 @@ public class NoteListActivity extends AppCompatActivity {
                 Intent intent = new Intent(NoteListActivity.this, NoteActivity.class);
 
                 //the selected note is now passed in with the intent!
-                NoteInfo note = (NoteInfo) listNotes.getItemAtPosition(position);
-                intent.putExtra(NoteActivity.NOTE_INFO, note);
+                //we no longer need this when we use the note position, since the datasource is
+                //a singleton and both the noteactivity and the notelistactivity have access to it.
+//                NoteInfo note = (NoteInfo) listNotes.getItemAtPosition(position);
+
+                intent.putExtra(NoteActivity.NOTE_POSITION, position);
                 //start our activity from the intent!
                 startActivity(intent);
             }
