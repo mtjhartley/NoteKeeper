@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
@@ -13,6 +14,7 @@ import android.widget.Spinner;
 import java.util.List;
 
 public class NoteActivity extends AppCompatActivity {
+    private final String TAG = getClass().getSimpleName();
     //this public static final string is used for extra information in our
     //NoteListActivity intent in initializeDisplayContent
     public static final String NOTE_POSITION = "com.example.michael.notekeeper.NOTE_POSITION";
@@ -61,6 +63,8 @@ public class NoteActivity extends AppCompatActivity {
         if (!mIsNewNote) {
             displayNote(mSpinnerCourses, mTextNoteTitle, mTextNoteText);
         }
+
+        Log.d(TAG, "onCreate");
     }
 
     private void restoreOriginalNoteValues(Bundle savedInstanceState) {
@@ -94,6 +98,7 @@ public class NoteActivity extends AppCompatActivity {
         super.onPause();
         //want to save our note within this method, unless we are cancelling!
         if(mIsCancelling){
+            Log.i(TAG, "cancelling note at position: " + mNotePosition);
             if(mIsNewNote) {
                 DataManager.getInstance().removeNote(mNotePosition);
             } else {
@@ -102,6 +107,8 @@ public class NoteActivity extends AppCompatActivity {
         } else {
         saveNote();
         }
+
+        Log.d(TAG, "onPause");
     }
 
     private void storePreviousNoteValues() {
@@ -129,24 +136,23 @@ public class NoteActivity extends AppCompatActivity {
         Intent intent = getIntent();
         //extras that are value type take 2 parameters, what do we return if there's no extra for 2nd param.
         //set as -1 and the refactor into a constant, -1 a static final int named POSITION_NOT_SET
-        int position = intent.getIntExtra(NOTE_POSITION, POSITION_NOT_SET);
+        mNotePosition = intent.getIntExtra(NOTE_POSITION, POSITION_NOT_SET);
         //note now contains a refernece to the note that was selected in the notelist activity.
-        mIsNewNote = position == POSITION_NOT_SET;
+        mIsNewNote = mNotePosition == POSITION_NOT_SET;
         if (mIsNewNote) {
             createNewNote();
-        } else {
-            //get the one if one exists from the intent!∂
-            mNote = DataManager.getInstance().getNotes().get(position);
         }
-
-
+        //this needs to happen if it's a new note or if it's an existing note
+        Log.i(TAG, "mNotePosition " + mNotePosition);
+        mNote = DataManager.getInstance().getNotes().get(mNotePosition);
     }
 
     private void createNewNote() {
-        //create a new note through readDisplayStateValues, called thru onCreate
+        //create a new note through readDSV, called thru onCreate
         DataManager dm = DataManager.getInstance();
         mNotePosition = dm.createNewNote();
-        mNote = dm.getNotes().get(mNotePosition);
+        //not necessary because we arre now doing this in readDSV
+        //mNote = dm.getNotes().get(mNotePosition);
     }
 
     @Override
