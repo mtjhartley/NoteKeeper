@@ -45,35 +45,7 @@ public class NoteListActivity extends AppCompatActivity {
     }
 
     private void initializeDisplayContent() {
-//        final ListView listNotes = (ListView) findViewById(R.id.list_notes);
-//
-//        //data manager to get all notes, load into adapter to populate our list view!
-//        List<NoteInfo> notes = DataManager.getInstance().getNotes();
-//        //change this to a class level field, for onResume to notifyDataSetChanged
-//        mAdapterNotes = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, notes);
-//
-//        listNotes.setAdapter(mAdapterNotes);
-//
-//        //accepts a reference to an interface, which can be implemented on our notelistactivity
-//        //take advantage of java anonymous class here!
-//        listNotes.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                //we want to create an intent and show our note activity
-//
-//                //need to qualify reference to be NoteListActivity.this
-//                Intent intent = new Intent(NoteListActivity.this, NoteActivity.class);
-//
-//                //the selected note is now passed in with the intent!
-//                //we no longer need this when we use the note position, since the datasource is
-//                //a singleton and both the noteactivity and the notelistactivity have access to it.
-////                NoteInfo note = (NoteInfo) listNotes.getItemAtPosition(position);
-//
-//                intent.putExtra(NoteActivity.NOTE_POSITION, position);
-//                //start our activity from the intent!
-//                startActivity(intent);
-//            }
-//        });
+
         final RecyclerView recyclerNotes = (RecyclerView) findViewById(R.id.list_notes);
         final LinearLayoutManager notesLayoutManager = new LinearLayoutManager(this);
         recyclerNotes.setLayoutManager(notesLayoutManager);
