@@ -177,9 +177,25 @@ public class NoteActivity extends AppCompatActivity {
             mIsCancelling = true;
             //returns to previous activity, need to circumvent onPause
             finish();
+        } else if (id == R.id.action_next){
+            moveNext();
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void moveNext() {
+        //Save old note
+        saveNote();
+        //Increment position and get data
+        mNotePosition++;
+        mNote = DataManager.getInstance().getNotes().get(mNotePosition);
+
+        //Save the original values before displaying in case we want to cancel
+        saveOriginalNoteValues();
+
+        //Display
+        displayNote(mSpinnerCourses, mTextNoteTitle, mTextNoteText);
     }
 
     private void sendEmail() {
