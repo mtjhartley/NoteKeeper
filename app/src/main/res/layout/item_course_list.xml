@@ -39,7 +39,7 @@
                 android:layout_marginStart="8dp"
                 android:adjustViewBounds="true"
                 android:cropToPadding="true"
-                android:tint="#F05a28"
+                android:tint="@color/pluralsight_orange"
                 app:layout_constraintEnd_toEndOf="@+id/text_course"
                 app:layout_constraintStart_toStartOf="@+id/text_course"
                 app:layout_constraintTop_toBottomOf="@+id/text_course"
