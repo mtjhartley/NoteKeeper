@@ -99,7 +99,8 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void initializeDisplayContent() {
-
+        //gets connect from the database
+        DataManager.loadFromDatabase(mDbOpenHelper);
         mRecyclerItems = (RecyclerView) findViewById(R.id.list_items);
         mNotesLayoutManager = new LinearLayoutManager(this);
         mCoursesLayoutManager = new GridLayoutManager(this,
@@ -118,8 +119,6 @@ public class MainActivity extends AppCompatActivity
         mRecyclerItems.setLayoutManager(mNotesLayoutManager);
         mRecyclerItems.setAdapter(mNoteRecyclerAdapter);
 
-        //better time to connect to database coming soon!
-        mDbOpenHelper.getReadableDatabase();
         selectNavigationMenuItem(R.id.nav_notes);
     }
 
